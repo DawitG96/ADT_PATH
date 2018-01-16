@@ -1,0 +1,8 @@
+	SORT {manca mergesort}
+ok	STACK
+ok	BST
+	BST MORE {errore nella funzione upo_bst_is_bst}
+ok 	HASH SEPCHAIN
+ok	HASH SEPCHAIN MORE
+ok 	HASH LINPROB
+ok	HASH LINPROB MORE

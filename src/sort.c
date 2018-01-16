@@ -1,0 +1,148 @@
+/* vim: set tabstop=4 expandtab shiftwidth=4 softtabstop=4: */
+
+/*
+ * Copyright 2015 University of Piemonte Orientale, Computer Science Institute
+ *
+ * This file is part of UPOalglib.
+ *
+ * UPOalglib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * UPOalglib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with UPOalglib.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <assert.h>
+#include "sort_private.h"
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <../include/upo/utility.h>
+
+void upo_insertion_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
+{
+    /* Variabili */
+    size_t i;
+    size_t j;
+    char* a = (char*) base;
+    
+    /* Codice pag 14 Lezione 06 - Sort */
+    for(i = 1; i < n; i++)
+    {
+        j = i;
+        while( j > 0 && cmp( &a[j*size], &a[(j-1)*size] ) < 0)
+        {
+            upo_swap( &a[j*size], &a[(j-1)*size], size);
+            j--;
+        }
+    }
+
+}
+
+void upo_merge_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
+{
+       upo_merge_sort_rec((char*) base, 0, n-1, size, cmp);
+    
+}
+
+static void upo_merge_sort_rec(char* a, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp)
+{
+    /* Variabili */
+    size_t mid = 0;
+    
+    /* Codice pag 16 Lezione 06 - Sort */
+    if(lo >= hi)
+        return;
+    
+    mid = (lo+hi)/2;
+    
+    upo_merge_sort_rec(a, lo, mid, size, cmp);
+    upo_merge_sort_rec(a, mid+1, hi, size, cmp);
+    upo_merge(a, lo, mid, hi, size, cmp);
+    
+}
+
+static void upo_merge(char* a, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp)
+{
+    /* Variabili */
+    size_t i = 0;
+    size_t j = mid+1-lo;
+    size_t k = 0;
+    char aux[ (size*(hi-lo+1)) ];
+    
+    /* Codice pag 16 Lezione 06 - Sort */
+	
+    memcpy(&aux, &a[lo], size*(hi-lo+1));
+    
+    for( k = lo; k <= hi; k++)
+    {
+        if( i > (mid-lo) )
+        {
+            memcpy(&a[k*size], &aux[j*size], size);
+            j++;
+        }
+        else if( j > (hi-lo) )
+        {
+            memcpy(&a[k*size], &aux[i*size], size);
+            i++;
+        }
+        else if( cmp(&aux[j*size], &aux[i*size]) < 0 )
+        {
+            memcpy(&a[k*size], &aux[j*size], size);
+            j++;
+        }
+        else
+        {
+            memcpy(&a[k*size], &aux[i*size], size);
+            i++;
+        }
+        
+    }
+    
+}
+
+void upo_quick_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
+{  
+    upo_quick_sort_rec((char*) base, 0, n-1, size, cmp);   
+}
+
+static void upo_quick_sort_rec(char* a, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp)
+{
+    if( lo >= hi )
+        return;
+    size_t j;
+    j = upo_partition(a, lo, hi, size, cmp);
+    
+    if( j > 0 )
+        upo_quick_sort_rec(a, lo, j-1, size, cmp);
+    upo_quick_sort_rec(a, j+1, hi, size, cmp);
+    
+}
+
+static size_t upo_partition(char* a, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp)
+{
+    size_t p = lo;
+    size_t i = lo;
+    size_t j = hi+1;
+    
+    while(1)
+    {
+
+        do{ i++; }while(!( i >= hi || cmp(&a[i*size], &a[p*size]) >= 0 ));
+        do{ j--; }while(!( j <= lo || cmp(&a[j*size], &a[p*size]) <= 0 ));
+        if( i >= j )
+            break;
+        upo_swap(&a[i*size], &a[j*size], size);
+    }
+    
+    upo_swap(&a[p*size], &a[j*size], size);
+    return j;
+}
