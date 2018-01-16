@@ -276,7 +276,7 @@ void test_put_get_delete()
         upo_bst_put(bst, &keys3[i], &values[i]);
     }
     /* Search */
-/*    for (i = 0; i < n; ++i)
+    for (i = 0; i < n; ++i)
     {
         int* value = NULL;
 
