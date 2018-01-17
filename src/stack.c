@@ -52,7 +52,7 @@ void upo_stack_push(upo_stack_t stack, void* data)
 {
 	if (stack != NULL && data != NULL){
 	upo_stack_node_t *node = (upo_stack_node_t*)malloc(sizeof (upo_stack_node_t));
-	
+
 	node->data = data;
 
 	node->next = stack->top;
@@ -63,94 +63,61 @@ void upo_stack_push(upo_stack_t stack, void* data)
 
 void upo_stack_pop(upo_stack_t stack, int destroy_data)
 {
- 
-	
+
+
 	if(stack != NULL)
     {
         if(stack->top != NULL)
         {
             upo_stack_node_t* p = stack->top->next;
-            
+
             if(destroy_data)
                 free(stack->top->data);
-            
+
             free(stack->top);
-            
+
             stack->top = p;
             stack->size--;
-            
+
         }
     }
 }
 
-void* upo_stack_top(const upo_stack_t stack)
-{
-    /* TO STUDENTS:
-     *  Remove the following two lines and put here your implementation. 
-    fprintf(stderr, "To be implemented!\n");
-    abort();*/
-	
-	if (stack != NULL && stack->top != NULL) 
-    {
+void* upo_stack_top(const upo_stack_t stack){
+
+	if (stack != NULL && stack->top != NULL){
 
 		upo_stack_node_t* node = stack->top;
 		void*element = node->data;
-		return element; 
+		return element;
 	}
-    return NULL;
+  return NULL;
 }
 
-int upo_stack_is_empty(const upo_stack_t stack)
-{
+int upo_stack_is_empty(const upo_stack_t stack){
+
 	if (stack != NULL){
+
 		if (stack->size ==0) return 1;
 			else return 0;
 	}
 	else return 1;
 }
 
-size_t upo_stack_size(const upo_stack_t stack)
-{
-    /* TO STUDENTS:
-     *  Remove the following two lines and put here your implementation. 
-    fprintf(stderr, "To be implemented!\n");
-    abort();*/
+size_t upo_stack_size(const upo_stack_t stack){
+
 	if (stack != NULL)
 		return stack->size;
 	else return 0;
 
-	
 }
 
-void upo_stack_clear(upo_stack_t stack, int destroy_data)
-{
-    /* HINT:
-     * 1. For each node of the list stored in "stack":
-     *  1.1 Save the node pointed by "top" to a temporary variable "node"
-     *  1.2 Advance the "top" pointer by one node
-     *  1.3 If "destroy_data" != 0, destroy user data stored in "node" by invoking "free(node->data)"
-     *  1.4 Destroy "node" by invoking "free(node)"
-     * 2. Update stack size.
-     */
+void upo_stack_clear(upo_stack_t stack, int destroy_data){
 
-    /* TO STUDENTS:
-     *  Remove the following two lines and put here your implementation. 
-    fprintf(stderr, "To be implemented!\n");
-    abort();*/
-	/*
-	
-	while (stack->size !=0){
-		
-		upo_stack_node_t* node = stack->top;
-		stack->top = node->next;
-		if (destroy_data != 0) free (node->data);
-		free(node);
-		stack->size --;*/
-		 if(stack != NULL)
-    {
-        while(stack->top != NULL)
-        {
+		 if(stack != NULL){
+
+       while(stack->top != NULL)
             upo_stack_pop(stack, destroy_data);
-        }
+
     }
 }

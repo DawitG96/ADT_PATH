@@ -112,10 +112,38 @@ upo_ht_sepchain_list_node_t* upo_ht_sepchain_list_node_create(void* k, void* v) 
 }
 
 void* upo_ht_sepchain_put(upo_ht_sepchain_t ht, void* key, void* value) {
+
 	if(ht != NULL) {
+
 		void* old_value = NULL;
 		int key_hash = (int) ht->key_hash(key, ht->capacity);
 		upo_ht_sepchain_list_node_t* n = ht->slots[key_hash].head;
+
+		while ((n != NULL) && (ht->key_cmp(key, n->key) != 0))
+				n = n->next;
+
+		if (n == NULL) {
+				n = upo_ht_sepchain_list_node_create(key, value);
+				n->next = ht->slots[key_hash].head;
+				ht->slots[key_hash].head = n;
+			}
+
+			else {
+				old_value = n->value;
+				n->value = value;
+			}
+
+		return old_value;
+	}
+
+	return NULL;
+}
+
+void upo_ht_sepchain_insert(upo_ht_sepchain_t ht, void* key, void* value) {
+
+	if(ht != NULL) {
+			int key_hash = (int) ht->key_hash(key, ht->capacity);
+			upo_ht_sepchain_list_node_t* n = ht->slots[key_hash].head;
 
 			while ((n != NULL) && (ht->key_cmp(key, n->key) != 0))
 				n = n->next;
@@ -124,32 +152,12 @@ void* upo_ht_sepchain_put(upo_ht_sepchain_t ht, void* key, void* value) {
 				n = upo_ht_sepchain_list_node_create(key, value);
 				n->next = ht->slots[key_hash].head;
 				ht->slots[key_hash].head = n;
-			} else {
-				old_value = n->value;
-				n->value = value;
-			}
-		return old_value;
-	}
-	return NULL;
-}
-
-void upo_ht_sepchain_insert(upo_ht_sepchain_t ht, void* key, void* value) {
-	if(ht != NULL) {
-		int key_hash = (int) ht->key_hash(key, ht->capacity);
-		upo_ht_sepchain_list_node_t* n = ht->slots[key_hash].head;
-
-		while ((n != NULL) && (ht->key_cmp(key, n->key) != 0))
-			n = n->next;
-
-		if (n == NULL) {
-			n = upo_ht_sepchain_list_node_create(key, value);
-			n->next = ht->slots[key_hash].head;
-			ht->slots[key_hash].head = n;
 		}
 	}
 }
 
 void* upo_ht_sepchain_get(const upo_ht_sepchain_t ht, const void* key) {
+
 	if(ht != NULL) {
 		int key_hash = (int) ht->key_hash(key, ht->capacity);
 		upo_ht_sepchain_list_node_t* n = ht->slots[key_hash].head;
@@ -160,10 +168,12 @@ void* upo_ht_sepchain_get(const upo_ht_sepchain_t ht, const void* key) {
 		if (n != NULL)
 			return n->value;
 	}
+
 	return NULL;
 }
 
 int upo_ht_sepchain_contains(const upo_ht_sepchain_t ht, const void* key) {
+
 	if (upo_ht_sepchain_get(ht, key) != NULL)
 		return 1;
 	else
@@ -171,16 +181,19 @@ int upo_ht_sepchain_contains(const upo_ht_sepchain_t ht, const void* key) {
 }
 
 void upo_ht_sepchain_destroy_node(upo_ht_sepchain_list_node_t* x, int dd) {
+
 	if(dd) {
 		free(x->value);
 		free(x->key);
 	}
+
 	free(x);
 }
 
 void upo_ht_sepchain_delete(upo_ht_sepchain_t ht, const void* key, int destroy_data) {
+
 	if (ht != NULL) {
-		int key_hash = (int) ht->key_hash(key, ht->capacity); /* ++++++++++++++ (int) upo_ht_hash_int_div(key, ht->capacity); see put */
+		int key_hash = (int) ht->key_hash(key, ht->capacity);
 		upo_ht_sepchain_list_node_t* n = ht->slots[key_hash].head;
 		upo_ht_sepchain_list_node_t* p = NULL;
 
@@ -201,6 +214,7 @@ void upo_ht_sepchain_delete(upo_ht_sepchain_t ht, const void* key, int destroy_d
 }
 
 size_t upo_ht_sepchain_size(const upo_ht_sepchain_t ht) {
+
 	if (ht!=NULL) {
 		int i=0;
 		int c = (int) ht->capacity;
@@ -210,14 +224,16 @@ size_t upo_ht_sepchain_size(const upo_ht_sepchain_t ht) {
 		for (i=0; i<c ; i++) {
 			node = ht->slots[i].head;
 
-			while (node != NULL) {
-				if (node->key != NULL)
-					count_keys++;
-				node= node->next;
+		while (node != NULL) {
+			if (node->key != NULL)
+				count_keys++;
+			node= node->next;
 			}
+
 		}
 		return count_keys;
 	}
+
 	return 0;
 }
 
@@ -348,6 +364,7 @@ void upo_ht_linprob_clear(upo_ht_linprob_t ht, int destroy_data) {
 }
 
 void* upo_ht_linprob_put(upo_ht_linprob_t ht, void* key, void* value) {
+
 	if (ht!=NULL) {
 		if (ht->capacity != 0) {
 			void* old_value = NULL;
@@ -364,6 +381,7 @@ void* upo_ht_linprob_put(upo_ht_linprob_t ht, void* key, void* value) {
 					found_tomb = 1;
 					key_tomb= key_hash;
 				}
+
 				key_hash= (key_hash+1)% ht->capacity;
 			}
 
@@ -374,6 +392,7 @@ void* upo_ht_linprob_put(upo_ht_linprob_t ht, void* key, void* value) {
 				ht->slots[key_hash].value = value;
 				ht->slots[key_hash].tombstone=0;
 			}
+
 			else {
 				old_value= ht->slots[key_hash].value;
 				ht->slots[key_hash].value = value;
@@ -382,11 +401,12 @@ void* upo_ht_linprob_put(upo_ht_linprob_t ht, void* key, void* value) {
 			return old_value;
 		}
 	}
-	return NULL;
 
+	return NULL;
 }
 
 void upo_ht_linprob_insert(upo_ht_linprob_t ht, void* key, void* value) {
+
 	if (ht!=NULL) {
 		if (ht->capacity != 0) {
 			double load_factor = upo_ht_linprob_load_factor(ht);
@@ -417,6 +437,7 @@ void upo_ht_linprob_insert(upo_ht_linprob_t ht, void* key, void* value) {
 }
 
 void* upo_ht_linprob_get(const upo_ht_linprob_t ht, const void* key) {
+
 	if (ht != NULL) {
 		int key_hash = (int) ht->key_hash(key, ht->capacity);
 		while ((ht->slots[key_hash].key != NULL && key != ht->slots[key_hash].key) || ht->slots[key_hash].tombstone )
@@ -424,18 +445,22 @@ void* upo_ht_linprob_get(const upo_ht_linprob_t ht, const void* key) {
 		if (ht->slots[key_hash].key != NULL)
 			return ht->slots[key_hash].value;
 	}
+
 	return NULL;
 }
 
 int upo_ht_linprob_contains(const upo_ht_linprob_t ht, const void* key) {
+
 	if (ht != NULL) {
 		if (upo_ht_linprob_get (ht, key))
 			return 1;
 	}
+
 	return 0;
 }
 
 void upo_ht_linprob_delete(upo_ht_linprob_t ht, const void* key, int destroy_data) {
+
 	if (ht!= NULL) {
 		if(ht->capacity != 0) {
 			int key_hash= (int)ht->key_hash(key, ht->capacity);
@@ -455,6 +480,7 @@ void upo_ht_linprob_delete(upo_ht_linprob_t ht, const void* key, int destroy_dat
 }
 
 size_t upo_ht_linprob_size(const upo_ht_linprob_t ht) {
+
 	if (ht != NULL) {
 		size_t count=0;
 		size_t i=0;
@@ -463,6 +489,7 @@ size_t upo_ht_linprob_size(const upo_ht_linprob_t ht) {
 				count ++;
 		return count;
 	}
+
 	return 0;
 }
 
@@ -485,8 +512,8 @@ double upo_ht_linprob_load_factor(const upo_ht_linprob_t ht) {
 /*** EXERCISE #3 - BEGIN of HASH TABLE - EXTRA OPERATIONS ***/
 
 
-upo_ht_key_list_t upo_ht_sepchain_keys(const upo_ht_sepchain_t ht)
-{
+upo_ht_key_list_t upo_ht_sepchain_keys(const upo_ht_sepchain_t ht){
+
 	if(ht != NULL) {
 		size_t i=0;
 		upo_ht_key_list_t list=NULL, temp=NULL;
@@ -516,6 +543,7 @@ upo_ht_key_list_t upo_ht_sepchain_keys(const upo_ht_sepchain_t ht)
 }
 
 void upo_ht_sepchain_traverse(const upo_ht_sepchain_t ht, upo_ht_visitor_t visit, void* visit_arg) {
+
 	if (ht != NULL) {
 		size_t i=0;
 		upo_ht_sepchain_list_node_t* node = NULL;
@@ -531,6 +559,7 @@ void upo_ht_sepchain_traverse(const upo_ht_sepchain_t ht, upo_ht_visitor_t visit
 }
 
 upo_ht_key_list_t upo_ht_linprob_keys(const upo_ht_linprob_t ht) {
+
 	if (ht!=NULL) {
 		upo_ht_key_list_t list=NULL, temp=NULL;
 		size_t i=0;
