@@ -357,7 +357,7 @@ void* upo_bst_floor(const upo_bst_t tree, const void* key) {
 				return NULL;
 
 			do{
-				if(prec != NULL && cmp(key, node->key)<0 && cmp(key, prec->key)>0)
+				if(prec != NULL && cmp(key, node->key)<0 && cmp(key, prec->key)>0 && node->left == NULL)
 					return prec->key;
 
 				prec = node;
@@ -390,7 +390,7 @@ void* upo_bst_ceiling(const upo_bst_t tree, const void* key) {
 				return NULL;
 
 			do{
-				if(prec != NULL && cmp(key, node->key)>0 && cmp(key, prec->key)<0)
+				if(prec != NULL && cmp(key, node->key)>0 && cmp(key, prec->key)<0 && node->right == NULL)
 					return prec->key;
 
 				prec = node;
