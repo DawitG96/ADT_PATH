@@ -27,6 +27,43 @@
 #include <string.h>
 #include <../include/upo/utility.h>
 
+void upo_bubble_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
+{
+    /* Variabili */
+    size_t i;
+    size_t j;
+    char* a = (char*) base;
+    size_t cont=1;
+	int k=0;
+
+	while(cont>1 || k%2==1)
+	{
+		if(k%2==0)
+			cont=0;
+		//scansione dispari/pari
+		for(j = k%2; j < n-2; j+=2)
+		{
+			if(cmp(&a[j*size],&a[(j+1)*size]) > 0)
+			{
+				cont++;
+				swap(&a[j*size],&a[(j+1)*size],size);
+			}
+		}
+		k++;
+		//scansione pari dispari
+		/*
+		for(j = 0; j < n-2; j+=2)
+		{
+			if(cmp(&a[j*size],&a[(j+1)*size]) > 0)
+			{
+				cont=1;
+				swap(&a[j*size],&a[(j+1)*size],size);
+			}
+		}
+		*/
+	}     
+}
+
 void upo_insertion_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
 {
     /* Variabili */
@@ -71,15 +108,18 @@ static void upo_merge_sort_rec(char* a, size_t lo, size_t hi, size_t size, upo_s
 static void upo_merge(char* a, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp)
 {
 	/* Variabili */
+	hi -= lo+1;
+	mid -= lo+1;
+
 	size_t i = 0;
-	size_t j = mid+1-lo;
+	size_t j = mid;
 	size_t k = 0;
-	char* aux = (char*)malloc((hi-lo+1)*sizeof(char));
+	char* aux = (char*)malloc((hi)*sizeof(char));
 
 	/* Codice pag 16 Lezione 06 - Sort */
-	memcpy(aux, &a[lo], size*(hi-lo+1));
+	memcpy(aux, &a[lo], size*(hi));
 
-	for(k=lo; i<mid+1 && j<hi+1; k++) {
+	for(k=lo; i<mid && j<hi; k++) {
 		if(cmp(&aux[i*size], &aux[j*size]) < 0) {
 			memcpy(&a[k*size], &aux[i*size], size);
 			i++;
@@ -90,12 +130,12 @@ static void upo_merge(char* a, size_t lo, size_t mid, size_t hi, size_t size, up
 		}
 	}
 
-	while(i<mid+1) {
+	while(i<mid) {
 		memcpy(&a[k*size], &aux[i*size], size);
 		i++;
 		k++;
 	}
-	while(j<hi+1) {
+	while(j<hi) {
 		memcpy(&a[k*size], &aux[j*size], size);
 		j++;
 		k++;

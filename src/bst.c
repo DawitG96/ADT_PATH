@@ -224,6 +224,67 @@ size_t upo_bst_size_impl (upo_bst_node_t* node) {
 			return 1 + upo_bst_size_impl(node->left) + upo_bst_size_impl(node->right);
 }
 
+size_t upo_bst_size(const upo_bst_t tree, int key)
+{
+	if (tree != NULL)
+	{
+		upo_bst_comparator_t cmp = upo_bst_get_comparator(tree);
+		upo_bst_node_t *node = malloc(sizeof(struct upo_bst_node_s));
+		node = tree->root;
+		int fail = 0; //nel caso non esistesse il nodo con quella key
+		int found = 0
+		/*
+		while(node!=NULL && fail==0 && found!=1)
+		{
+			if (cmp (key ,node->key) < 0) 
+			{
+				if(node->left!=NULL)
+					node = node->left;
+				else
+					fail++;
+			}
+			if (cmp (key ,node->key) > 0) 
+			{
+				if(node->right!=NULL)
+					node = node->right;
+				else
+					fail++;
+			}
+			if(cmp (key ,node->key) == 0)
+				found = 1;
+		}
+		if(fail==0)
+			return upo_bst_size_impl(node);
+		return 0;
+		*/
+		int val=1;
+		while(node!=NULL && val!=0)
+		{
+			val=cmp(key ,node->key);
+			if (val < 0) 
+			{
+				node = node->left;
+			}
+			if (val > 0) 
+			{
+				node = node->right;
+			}
+			
+		}
+		return upo_bst_size_impl(node);
+	}
+    else return 0;
+}
+
+size_t upo_bst_size_even(upo_bst_node_t* node, int pos){
+	if (node == NULL)
+		return 0;
+	size_t count = upo_bst_size_impl(node->left,pos+1) + upo_bst_size_impl(node->right,pos+1);
+	if(pos%2 == 0)
+		count++;
+	return count;
+}
+
 size_t upo_bst_size(const upo_bst_t tree) {
 	if (tree != NULL)
 		return upo_bst_size_impl (tree->root);
