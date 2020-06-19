@@ -266,6 +266,7 @@ size_t upo_bst_size_impl (upo_bst_node_t* node){
 
 }
 
+/*
 size_t upo_bst_size(const upo_bst_t tree, int key)
 {
 	//conta dimensione sottoalbero
@@ -276,30 +277,7 @@ size_t upo_bst_size(const upo_bst_t tree, int key)
 		node = tree->root;
 		int fail = 0; //nel caso non esistesse il nodo con quella key
 		int found = 0
-		/*
-		while(node!=NULL && fail==0 && found!=1)
-		{
-			if (cmp (key ,node->key) < 0) 
-			{
-				if(node->left!=NULL)
-					node = node->left;
-				else
-					fail++;
-			}
-			if (cmp (key ,node->key) > 0) 
-			{
-				if(node->right!=NULL)
-					node = node->right;
-				else
-					fail++;
-			}
-			if(cmp (key ,node->key) == 0)
-				found = 1;
-		}
-		if(fail==0)
-			return upo_bst_size_impl(node);
-		return 0;
-		*/
+		
 		int val=1;
 		while(node!=NULL && val!=0)
 		{
@@ -327,6 +305,7 @@ size_t upo_bst_size_even(upo_bst_node_t* node, int pos){
 		count++;
 	return count;
 }
+*/
 
 size_t upo_bst_size(const upo_bst_t tree)
 {
@@ -574,7 +553,7 @@ upo_bst_key_list_t upo_bst_keys_range(const upo_bst_t tree, const void* low_key,
 	} else return NULL;
     
 }
-upo_bst_key_list_t upo_bst_keys_range_impl(upo_bst_comparator_t cmp, upo_bst_node_t* node, void* low, void* high, upo_bst_key_list_t list){
+upo_bst_key_list_t upo_bst_keys_range_impl(upo_bst_comparator_t cmp, upo_bst_node_t* node,const void* low,const void* high, upo_bst_key_list_t list){
     if(node==NULL)
         return list;
 	
@@ -644,7 +623,7 @@ int upo_bst_is_bst(const upo_bst_t tree, const void* min_key, const void* max_ke
     return 1;
 }
 
-int upo_bst_is_bst_impl (upo_bst_node_t* node, void* min,void* max, upo_bst_comparator_t cmp){
+int upo_bst_is_bst_impl (upo_bst_node_t* node, const void* min,const void* max, upo_bst_comparator_t cmp){
     int val1 =0;
     int val2 =0; 
     if (node == NULL) return 1;

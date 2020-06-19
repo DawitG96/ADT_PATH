@@ -39,7 +39,7 @@ void upo_bubble_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cm
 	{
 		if(k%2==0)
 			cont=0;
-		//scansione dispari/pari
+		/*scansione dispari/pari*/
 		for(j = k%2; j < n-2; j+=2)
 		{
 			if(cmp(&a[j*size],&a[(j+1)*size]) > 0)
@@ -49,7 +49,7 @@ void upo_bubble_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cm
 			}
 		}
 		k++;
-		//scansione pari dispari
+		/*scansione pari dispari*/
 		/*
 		for(j = 0; j < n-2; j+=2)
 		{
