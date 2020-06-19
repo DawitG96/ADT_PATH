@@ -25,8 +25,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <../include/upo/utility.h>
 
+#include <../include/upo/utility.h>
 void upo_bubble_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
 {
     /* Variabili */
@@ -35,8 +35,7 @@ void upo_bubble_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cm
     char* a = (char*) base;
     size_t cont=1;
 	int k=0;
-
-	while(cont>1 || k%2==1)
+    while(cont>1 || k%2==1)
 	{
 		if(k%2==0)
 			cont=0;
@@ -61,7 +60,9 @@ void upo_bubble_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cm
 			}
 		}
 		*/
-	}     
+	}
+    
+
 }
 
 void upo_insertion_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
@@ -70,7 +71,7 @@ void upo_insertion_sort(void* base, size_t n, size_t size, upo_sort_comparator_t
     size_t i;
     size_t j;
     char* a = (char*) base;
-
+    
     /* Codice pag 14 Lezione 06 - Sort */
     for(i = 1; i < n; i++)
     {
@@ -86,81 +87,82 @@ void upo_insertion_sort(void* base, size_t n, size_t size, upo_sort_comparator_t
 
 void upo_merge_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
 {
-	upo_merge_sort_rec((char*) base, 0, n-1, size, cmp);
+       upo_merge_sort_rec((char*) base, 0, n-1, size, cmp);
+    
 }
 
 static void upo_merge_sort_rec(char* a, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp)
 {
-	/* Variabili */
-	size_t mid = 0;
-
-	/* Codice pag 16 Lezione 06 - Sort */
-	if(lo >= hi)
-		return;
-
-	mid = (lo+hi)/2;
-
-	upo_merge_sort_rec(a, lo, mid, size, cmp);
-	upo_merge_sort_rec(a, mid+1, hi, size, cmp);
-	upo_merge(a, lo, mid, hi, size, cmp);
+    /* Variabili */
+    size_t mid = 0;
+    
+    /* Codice pag 16 Lezione 06 - Sort */
+    if(lo >= hi)
+        return;
+    
+    mid = (lo+hi)/2;
+    
+    upo_merge_sort_rec(a, lo, mid, size, cmp);
+    upo_merge_sort_rec(a, mid+1, hi, size, cmp);
+    upo_merge(a, lo, mid, hi, size, cmp);
+    
 }
 
 static void upo_merge(char* a, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp)
 {
-	/* Variabili */
-	hi -= lo+1;
-	mid -= lo+1;
-
-	size_t i = 0;
-	size_t j = mid;
-	size_t k = 0;
-	char* aux = (char*)malloc((hi)*sizeof(char));
-
-	/* Codice pag 16 Lezione 06 - Sort */
-	memcpy(aux, &a[lo], size*(hi));
-
-	for(k=lo; i<mid && j<hi; k++) {
-		if(cmp(&aux[i*size], &aux[j*size]) < 0) {
-			memcpy(&a[k*size], &aux[i*size], size);
-			i++;
-		}
-		else {
-			memcpy(&a[k*size], &aux[j*size], size);
-			j++;
-		}
-	}
-
-	while(i<mid) {
-		memcpy(&a[k*size], &aux[i*size], size);
-		i++;
-		k++;
-	}
-	while(j<hi) {
-		memcpy(&a[k*size], &aux[j*size], size);
-		j++;
-		k++;
-	}
-
-	free(aux);
+    /* Variabili */
+    size_t i = 0;
+    size_t j = mid+1-lo;
+    size_t k = 0;
+    char aux[ (size*(hi-lo+1)) ];
+    
+    /* Codice pag 16 Lezione 06 - Sort */
+	
+    memcpy(&aux, &a[lo], size*(hi-lo+1));
+    
+    for( k = lo; k <= hi; k++)
+    {
+        if( i > (mid-lo) )
+        {
+            memcpy(&a[k*size], &aux[j*size], size);
+            j++;
+        }
+        else if( j > (hi-lo) )
+        {
+            memcpy(&a[k*size], &aux[i*size], size);
+            i++;
+        }
+        else if( cmp(&aux[j*size], &aux[i*size]) < 0 )
+        {
+            memcpy(&a[k*size], &aux[j*size], size);
+            j++;
+        }
+        else
+        {
+            memcpy(&a[k*size], &aux[i*size], size);
+            i++;
+        }
+        
+    }
+    
 }
 
 void upo_quick_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
-{
-    upo_quick_sort_rec((char*) base, 0, n-1, size, cmp);
+{  
+    upo_quick_sort_rec((char*) base, 0, n-1, size, cmp);   
 }
 
 static void upo_quick_sort_rec(char* a, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp)
 {
-	size_t j;
     if( lo >= hi )
         return;
-
+    size_t j;
     j = upo_partition(a, lo, hi, size, cmp);
-
+    
     if( j > 0 )
         upo_quick_sort_rec(a, lo, j-1, size, cmp);
     upo_quick_sort_rec(a, j+1, hi, size, cmp);
-
+    
 }
 
 static size_t upo_partition(char* a, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp)
@@ -168,7 +170,7 @@ static size_t upo_partition(char* a, size_t lo, size_t hi, size_t size, upo_sort
     size_t p = lo;
     size_t i = lo;
     size_t j = hi+1;
-
+    
     while(1)
     {
 
@@ -178,7 +180,7 @@ static size_t upo_partition(char* a, size_t lo, size_t hi, size_t size, upo_sort
             break;
         upo_swap(&a[i*size], &a[j*size], size);
     }
-
+    
     upo_swap(&a[p*size], &a[j*size], size);
     return j;
 }
