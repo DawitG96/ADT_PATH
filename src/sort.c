@@ -105,7 +105,6 @@ static void upo_merge_sort_rec(char* a, size_t lo, size_t hi, size_t size, upo_s
     upo_merge_sort_rec(a, lo, mid, size, cmp);
     upo_merge_sort_rec(a, mid+1, hi, size, cmp);
     upo_merge(a, lo, mid, hi, size, cmp);
-    
 }
 
 static void upo_merge(char* a, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp)
@@ -114,7 +113,7 @@ static void upo_merge(char* a, size_t lo, size_t mid, size_t hi, size_t size, up
     size_t i = 0;
     size_t j = mid+1-lo;
     size_t k = 0;
-    char aux[ (size*(hi-lo+1)) ];
+    char aux[size*(hi-lo+1)];
     
     /* Codice pag 16 Lezione 06 - Sort */
 	
@@ -142,9 +141,7 @@ static void upo_merge(char* a, size_t lo, size_t mid, size_t hi, size_t size, up
             memcpy(&a[k*size], &aux[i*size], size);
             i++;
         }
-        
     }
-    
 }
 
 void upo_quick_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cmp)
