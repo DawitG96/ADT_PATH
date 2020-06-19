@@ -45,7 +45,7 @@ void upo_bubble_sort(void* base, size_t n, size_t size, upo_sort_comparator_t cm
 			if(cmp(&a[j*size],&a[(j+1)*size]) > 0)
 			{
 				cont++;
-				swap(&a[j*size],&a[(j+1)*size],size);
+				upo_swap(&a[j*size],&a[(j+1)*size],size);
 			}
 		}
 		k++;
