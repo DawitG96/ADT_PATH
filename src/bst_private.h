@@ -72,9 +72,9 @@ size_t upo_bst_size_impl (upo_bst_node_t* node); /* OK */
 
 upo_bst_node_t* upo_bst_delete_impl (upo_bst_node_t* node, const void* key, int destroy_data, upo_bst_comparator_t cmp);
 
-upo_bst_node_t* upo_bst_delete_impl_two_c (upo_bst_node_t* node, const void* key, int destory_data, upo_bst_comparator_t cmp);
+upo_bst_node_t* upo_bst_delete_impl_two_c (upo_bst_node_t* node, int destory_data, upo_bst_comparator_t cmp);
 
-upo_bst_node_t* upo_bst_delete_impl_one_c (upo_bst_node_t* node, const void* key, int destory_data, upo_bst_comparator_t cmp);
+upo_bst_node_t* upo_bst_delete_impl_one_c (upo_bst_node_t* node, int destory_data);
 
 upo_bst_node_t* upo_bst_max_impl (upo_bst_node_t* node);
 

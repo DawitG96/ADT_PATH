@@ -1,6 +1,6 @@
 docpath=./doc/api
 
-CFLAGS+=-Wall -Wextra -ansi -pedantic -g -I"$(PWD)/include"
+CFLAGS+=-Wall -Wextra -ansi -pedantic -g -I"$(PWD)/include" -std=c11
 #CFLAGS+=-DUPO_DEBUG
 #LDLIBS+=-lrt
 #apps_targets=

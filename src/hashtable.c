@@ -469,6 +469,10 @@ void upo_ht_linprob_delete(upo_ht_linprob_t ht, const void* key, int destroy_dat
 				key_hash = (key_hash+1) % ht->capacity;
 
 			if (ht->slots[key_hash].key != NULL) {
+				if(destroy_data) {
+					free(ht->slots[key_hash].key);
+					free(ht->slots[key_hash].value);
+				}
 				ht->slots[key_hash].key = NULL;
 				ht->slots[key_hash].value = NULL;
 				ht->slots[key_hash].tombstone= 1;
@@ -632,10 +636,11 @@ size_t upo_ht_hash_str(const void* x, size_t h0, size_t a, size_t m) {
 */
 	assert( h0 < m );
 
-	for (; *s; ++s)
+	for (; *s; ++s) 
+	{
 		h = (a*h + *s) % m;
-
-		return h;
+	}
+	return h;
 }
 
 size_t upo_ht_hash_str_djb2(const void* x, size_t m) {

@@ -56,9 +56,10 @@ int eval_postfix(const char* expr, long* res){
 			if (isdigit(n))
 				upo_stack_push(stack, &n);
 			else {
+                void* val2;
 			    void* val1 = upo_stack_top (stack);
 				upo_stack_pop(stack, 1);
-				void* val2 = upo_stack_top (stack);
+				val2 = upo_stack_top (stack);
 				upo_stack_pop(stack, 1);
 				
 				switch (n)
